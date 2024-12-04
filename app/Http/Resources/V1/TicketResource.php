@@ -24,7 +24,7 @@ class TicketResource extends JsonResource
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
             ],
-            'includes' => new UserResource($this->whenLoaded('user')),
+            'includes' => new UserResource($this->whenLoaded('author')),
             'relationships' => [
                 'author' => [
                     'data' => [
