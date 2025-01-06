@@ -6,10 +6,16 @@ use App\Http\Controllers\Api\V1\TicketController;
 use App\Http\Controllers\Api\V1\AuthorsController;
 use App\Http\Controllers\Api\V1\AuthorTicketsController;
 
-Route::middleware('auth:sanctum')->apiResource('tickets', TicketController::class);
-Route::middleware('auth:sanctum')->apiResource('authors', AuthorsController::class);
-Route::middleware('auth:sanctum')->apiResource('authors.tickets', AuthorTicketsController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('tickets', TicketController::class)->except(['update']);
+    Route::put('tickets/{ticket}', [TicketController::class, 'replace']);
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+    Route::apiResource('authors', AuthorsController::class);
+    Route::apiResource('authors.tickets', AuthorTicketsController::class)->except(['update']);
+    Route::put('authors/{author}/tickets/{ticket}', [AuthorTicketsController::class, 'replace']);
+
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
